@@ -50,8 +50,7 @@ def hill_decrypt(ciphertext, key_matrix):
         decrypted_blocks.append(decrypted_block)
 
     # Convert decrypted blocks back to characters
-    decrypted_text = ''.join([chr(block + 65) for block in np.concatenate(decrypted_blocks)])
-
+    decrypted_text = ''.join([chr(block + 65) for block in np.concatenate(decrypted_blocks)]) 
     return decrypted_text
 
 # Encrypt the message "PAY"
