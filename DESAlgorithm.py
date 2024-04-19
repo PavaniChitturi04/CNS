@@ -1,33 +1,42 @@
+
+#Write a C/JAVA program to implementthe DES algorithm logic.
+
+
 from pyDes import des, PAD_PKCS5, ECB
 
-def encrypt_des(key, data):
-    # Create a DES object with the key and ECB mode
-    k = des(key, ECB, key, pad=None, padmode=PAD_PKCS5)
-    # Encrypt the data
-    encrypted_data = k.encrypt(data)
-    return encrypted_data
-
-def decrypt_des(key, data):
-    # Create a DES object with the key and ECB mode
-    k = des(key, ECB, key, pad=None, padmode=PAD_PKCS5)
-    # Decrypt the data
-    decrypted_data = k.decrypt(data)
-    return decrypted_data
-
-if __name__ == "__main__":
-    # Take user input for the key (must be 8 bytes long)
-    key = input("Enter the key (8 bytes): ").encode()
+# Function to ensure the key is 8 bytes long
+def validate_key(key):
     if len(key) != 8:
-        print("Key must be 8 bytes long.")
-        exit(1)
+        raise ValueError("Key must be 8 bytes long (64 bits)")
+    return key
 
-    # Take user input for the plaintext
-    plaintext = input("Enter the plaintext: ").encode()
+# Function to ensure the data is a byte string
+def validate_data(data):
+    if not isinstance(data, bytes):
+        raise TypeError("Data must be a byte string")
+    return data
 
-    # Encrypt the plaintext
-    encrypted_text = encrypt_des(key, plaintext)
-    print("Encrypted:", encrypted_text.hex())
+# Get user input for the key
+key = input("Enter the key (must be 8 bytes long): ").encode('utf-8')
+key = validate_key(key)
 
-    # Decrypt the ciphertext
-    decrypted_text = decrypt_des(key, encrypted_text)
-    print("Decrypted:", decrypted_text.decode())
+# Get user input for the data
+data = input("Enter the data to be encrypted: ").encode('utf-8')
+data = validate_data(data)
+
+# Create DES object with the key
+des_cipher = des(key, padmode=PAD_PKCS5, mode=ECB)
+
+# Encrypt the data
+encrypted_data = des_cipher.encrypt(data)
+
+# Decrypt the encrypted data
+decrypted_data = des_cipher.decrypt(encrypted_data)
+
+# Convert bytes to hexadecimal for better visualization
+encrypted_hex = encrypted_data.hex()
+decrypted_text = decrypted_data.decode('utf-8')
+
+# Display the output
+print("Encrypted data (hexadecimal):", encrypted_hex)
+print("Decrypted data:", decrypted_text)
